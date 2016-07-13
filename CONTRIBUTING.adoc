@@ -1,0 +1,21 @@
+= Contributing
+
+I would love contributions in form of bug reports or even better pull
+request fixing bugs or missing features!
+
+The best way to do bug reports are that you replicate the issue in a Google
+Document, make it publically readable (if I need to edit, I can copy
+it) and put a link to said document in your bug reports and/or pull
+requests.
+
+If you are adding or requesting a new feature please do not hesitate
+to simply copy the
+https://docs.google.com/document/d/19VD9FCTj6tHeWxdhkmctA1r9Ko3surX3Ee8wp_iwlo4/edit?usp=sharing[test
+document] and provide a link to your new document (remember to share
+it) with the new/missing feture illustrated in a new section.
+
+For fun I've also enabled comments on the test document so you can actually provide
+suggestions directly - if you do, please put a link back to the relevant issue
+or pull-request in this git repo.
+
+Thank you!
