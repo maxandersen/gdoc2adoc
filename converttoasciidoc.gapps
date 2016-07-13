@@ -319,7 +319,7 @@ function handleText(doc, state) {
         index = attrs[i];
         url = txt.getLinkUrl(off);
       }
-      formatted = formatted.substring(0, index) + '[' + formatted.substring(index, lastIndex) + '](' + url + ')' + formatted.substring(lastIndex);
+      formatted = formatted.substring(0, index) +   url + '[' + formatted.substring(index, lastIndex) + ']' + formatted.substring(lastIndex);
       
       // Do not handle additional formattings for links
       continue; 
