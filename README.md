@@ -1,7 +1,9 @@
-gdocs2md
+gdoc2adoc
 ========
 
-A simple Google Apps script to convert a properly formatted Google Drive Document to the markdown (.md) format. 
+A simple Google Apps script to convert a properly formatted Google
+Drive Document to asciidoc (.adoc) format, or rather more precisly
+asciidoctor compatible format.
 
 ![Screenshot Google Docs with gdocs2md](markdown.png)
 
@@ -11,7 +13,7 @@ A simple Google Apps script to convert a properly formatted Google Drive Documen
     * Open your Google Drive document (http://drive.google.com)
     * Tools -> Script Manager > New
     * Select "Blank Project", then paste this code in and save.
-    * Clear the myFunction() default empty function and paste the contents of `converttomarkdown.gapps` into the code editor
+    * Clear the myFunction() default empty function and paste the contents of `converttoasciidoc.gapps` into the code editor
     * File -> Save
     
   * Running the script (run as many times as you want):
@@ -48,9 +50,7 @@ A simple Google Apps script to convert a properly formatted Google Drive Documen
 
 ## CONTRIBUTORS
 
-* Renato Mangini - [G+](//google.com/+renatomangini) - [Github](//github.com/mangini)
-* Ed Bacher - [G+](//plus.google.com/106923847899206957842) - [Github](//github.com/evbacher)
-* Andreas Wolke - [G+](//plus.google.com/+AndreasWolke) - [Github](//github.com/jacksonicson)
+* Heavily inspired by https://github.com/jacksonicson/gdocs2md
 
 ## LICENSE
 
