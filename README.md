@@ -5,7 +5,7 @@ A simple Google Apps script to convert a properly formatted Google
 Drive Document to asciidoc (.adoc) format, or rather more precisly
 asciidoctor compatible format.
 
-![Screenshot Google Docs with gdocs2md](markdown.png)
+![Screenshot Google Docs with gdoc2adoc](asciidoc.png)
 
 ## Usage
 
@@ -23,29 +23,32 @@ asciidoctor compatible format.
 
 
 ## Interpreted formats
+
+Things not yet handled proper asciidoc way is marked with a todo.
+
   * Text:
     * paragraphs are separated by two newlines
-    * text styled as heading 1, 2, 3, etc is converted to Markdown heading: #, ##, ###, etc
-    * text formatted with Courier New is backquoted: ``text``
-    * links are converted to MD format: `[anchortext](url)`
-  * Lists:
+    * text styled as heading 1, 2, 3, etc is converted to AsciiDoc heading: =, ==, ===, etc
+    * TODO: text formatted with Courier New is backquoted: ``text``
+    * TODO: links are converted to MD format: `[anchortext](url)`
+  * TODO: Lists:
     * Numbered lists are converted correctly, including nested lists
     * bullet lists are converted to "`*`" Markdown format appropriately, including nested lists
   * Images:
     * images are correctly extracted and sent as attachments
   * Drawings: 
     * not supported - there seems to be no API function to export a drawing as a rasterized or vector image. 
-  * Equations:
+  * TODO: Equations:
     * Equations are converted to LaTex equations and surrounded by ``$`` signs 
   * Table of contents:
-    * Is replaced by `[[TOC]]`
+    * Is handled by asciidoctor `toc` macros
   * Horizontal line: 
     * Inserts a `---`
   * Header/Footer:
     * Extracts text with all formattings and inserts it at the top and bottom of the markdown document, seperated by `---`.
   * Tables:
-    * Converted to Markdown tables following GitHub Markdown syntax. Formatting within cells gets transferred.
-  * Source code: 
+    * Converted to AsciiDoc tables. Formatting within cells gets transferred.
+  * TODO: Source code: 
     * Fenced code blocks are started by three back-ticks and a string and ended by three back-ticks. If such a fenced code block is detected, single line break is used within it. 
 
 ## CONTRIBUTORS
