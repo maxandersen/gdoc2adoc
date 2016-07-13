@@ -434,7 +434,7 @@ function handleImage(image, state) {
   
   // Add image
   var textElements = []
-  textElements.push('![image alt text](' + filename + ')');
+  textElements.push('image:' + filename + '[]'); // TODO: this is inline only
   state.images.push( {
     "bytes": image.getBlob().getBytes(), 
     "blob": image.getBlob(), 
@@ -552,6 +552,14 @@ function processElement(element, state, depth) {
           textElements.push("\n:toc: macro\n")
           state.needToc = false;
         }
+
+        // look for positioned images
+        var positionedImages = element.getPositionedImages()
+        for(var image in positionedImages) {
+          image = positionedImages[image];
+          textElements.push("\n" + handleImage(image, state) + "\n")
+        }
+      
       }
       
       // Add paragraph break only if its not the last element on this layer
