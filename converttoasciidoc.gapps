@@ -1,3 +1,5 @@
+var ADOC_MIMETYPE = "text/asciidoc";
+
 // Open handler to add Menu
 function onOpen(e) {
   var ui = DocumentApp.getUi();
@@ -50,7 +52,7 @@ function ConvertToAsciiDocEmail() {
   
   // Add asciidoc document to attachments
   convertedDoc.attachments.push({"fileName":DocumentApp.getActiveDocument().getName()+".adoc", 
-                                 "mimeType": "text/plain", "content": convertedDoc.text});
+                                 "mimeType": ADOC_MIMETYPE, "content": convertedDoc.text});
 
   // In some cases user email is not accessible  
   var mail = Session.getActiveUser().getEmail(); 
@@ -107,7 +109,21 @@ function ConvertToAsciiDocFile() {
     found =  parent.createFolder(targetDirName);
   } else {
     Logger.log("Reusing existing target");
-  } // TODO: inform user if we create or overwrite ?
+    var ui = DocumentApp.getUi();
+    var result = ui.alert('Existing target folder found!', 'You already have "' + targetDirName + '" in your Drive. Delete folder or Cancel ?', 
+                          ui.ButtonSet.OK_CANCEL)
+                    
+    if(result == ui.Button.OK) {
+        Logger.log("Trashing target folder..."); 
+        found.setTrashed(true); 
+        Logger.log("Re-Creating output folder..."); 
+        found =  parent.createFolder(targetDirName);
+      
+    } else {
+        Logger.log("Do not delete target folder, stopping!"); 
+        return;
+    }
+  }
   
   // Write all files to target folder
   for(var file in convertedDoc.files) {
@@ -121,7 +137,7 @@ function ConvertToAsciiDocFile() {
   }
   
   // Write mardown file to target folder
-  found.createFile(DocumentApp.getActiveDocument().getName() + ".adoc", convertedDoc.text, "text/plain");   
+  found.createFile(DocumentApp.getActiveDocument().getName() + ".adoc", convertedDoc.text, ADOC_MIMETYPE);   
 }
 
 function processSection(section) {
