@@ -99,11 +99,12 @@ function ConvertToAsciiDocFile() {
     DocumentApp.getUi().alert("Document has to be in a directory for the export"); 
     return; 
   }
-   
-  var found = getFolder(parent,'target');
+  
+  var targetDirName = DocumentApp.getActiveDocument().getName() + ".adoc"
+  var found = getFolder(parent,targetDirName);
   if (found === false){
     Logger.log("Creating output folder..."); 
-    found =  parent.createFolder('target');
+    found =  parent.createFolder(targetDirName);
   } else {
     Logger.log("Reusing existing target");
   } // TODO: inform user if we create or overwrite ?
@@ -114,6 +115,8 @@ function ConvertToAsciiDocFile() {
     var blob = file.blob.copyBlob();
     var name = file.name; 
     blob.setName(name); 
+    
+    
     found.createFile(blob); 
   }
   
