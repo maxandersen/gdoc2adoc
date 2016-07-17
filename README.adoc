@@ -5,7 +5,11 @@ A simple Google Apps script to convert a properly formatted Google
 Drive Document to asciidoc (.adoc) format, or rather more precisly
 asciidoctor compatible format.
 
-![Screenshot Google Docs with gdoc2adoc](asciidoc.png)
+image:asciidoc.png[Screenshot Google Docs with gdoc2adoc]
+
+== Try it
+
+You can explore this script on this https://docs.google.com/document/d/19VD9FCTj6tHeWxdhkmctA1r9Ko3surX3Ee8wp_iwlo4/edit?usp=sharing[Google Doc] document - you just need to copy this to your own Google Drive to be able to run the script via the Tools or AsciiDoc menu.
 
 == Usage
 
