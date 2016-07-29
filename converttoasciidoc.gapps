@@ -315,7 +315,8 @@ function formatMd(text, indexLeft, formatLeft, indexRight, formatRight) {
     }
   }
   
-  var formatted = text.substring(0, indexLeft) + leftPad + text.substring(indexLeft, indexRight) + rightPad + text.substring(indexRight);
+  //Note: we do a trim via .replace since asciidoc wont format i.e. * test* with bold.
+  var formatted = text.substring(0, indexLeft) + leftPad + text.substring(indexLeft, indexRight).replace(/^\s+|\s+$/g,"") + rightPad + text.substring(indexRight);
   return formatted;
 }
 
@@ -363,6 +364,8 @@ function handleText(doc, state) {
       }
     }
     
+    
+    // TODO: does not handle nested formatting well.
     // Handle bold and bold italic
     if(doc.isBold(index)) {
       var dleft, right;
@@ -379,6 +382,12 @@ function handleText(doc, state) {
     // Handle italic
     else if(doc.isItalic(index)) {
       formatted = formatMd(formatted, index, '_', lastIndex, '_'); 
+    } else if(doc.isStrikethrough(index)) {
+      formatted = formatMd(formatted, index, '[.line-through]#', lastIndex, '#'); 
+    } else if(doc.getTextAlignment(index) == DocumentApp.TextAlignment.SUBSCRIPT) {
+      formatted = formatMd(formatted, index, '~', lastIndex, '~'); 
+    } else if(doc.getTextAlignment(index) == DocumentApp.TextAlignment.SUPERSCRIPT) {
+      formatted = formatMd(formatted, index, '^', lastIndex, '^'); 
     }
     
     // Keep track of last position in text
