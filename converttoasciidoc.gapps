@@ -430,6 +430,10 @@ function handleListItem(item, state, depth) {
       glyphprefix = '*'.repeat(item.getNestingLevel()+1) + ' ';
       break;
     case DocumentApp.GlyphType.NUMBER:
+    case DocumentApp.GlyphType.LATIN_LOWER:
+    case DocumentApp.GlyphType.LATIN_UPPER:
+    case DocumentApp.GlyphType.ROMAN_LOWER:
+    case DocumentApp.GlyphType.ROMAN_UPPER:
       var key = item.getListId() + '.' + item.getNestingLevel();
       //Logger.log("key " + key); 
       var counter = state.listCounters[key] || 0;
@@ -438,7 +442,7 @@ function handleListItem(item, state, depth) {
       glyphprefix += '.'.repeat(item.getNestingLevel()+1) + ' ';
       break;
     default:
-      glyphprefix += '*'.repeat(item.getNestingLevel()+1) + ' ';
+      glyphprefix += glyph + '*'.repeat(item.getNestingLevel()+1) + ' ';
       break;
   }
   
