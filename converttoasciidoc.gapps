@@ -12,7 +12,7 @@ function onOpen(e) {
     ui.createMenu('AsciiDoc')
       .addItem('Export File', 'ConvertToAsciiDocFile')
       .addItem('Export Email', 'ConvertToAsciiDocEmail')
-//      .addItem('Latex Equation', 'ConvertEquation')
+//    .addItem('Latex Equation', 'ConvertEquation')
       .addToUi();
   }
 }
@@ -93,7 +93,7 @@ function ConvertToAsciiDocFile() {
   if(parents.hasNext()) {
     parent = parents.next()
     if(parents.hasNext()) {
-      Logger.log("File has multiple parent directories. Script does not work in this case"); 
+      //Logger.log("File has multiple parent directories. Script does not work in this case"); 
       DocumentApp.getUi().alert("Document must not be in multiple directories");
       return; 
     }
@@ -105,22 +105,22 @@ function ConvertToAsciiDocFile() {
   var targetDirName = DocumentApp.getActiveDocument().getName() + ".adoc"
   var found = getFolder(parent,targetDirName);
   if (found === false){
-    Logger.log("Creating output folder..."); 
+    //Logger.log("Creating output folder..."); 
     found =  parent.createFolder(targetDirName);
   } else {
-    Logger.log("Reusing existing target");
+    //Logger.log("Reusing existing target");
     var ui = DocumentApp.getUi();
     var result = ui.alert('Existing target folder found!', 'You already have "' + targetDirName + '" in your Drive. Delete folder or Cancel ?', 
                           ui.ButtonSet.OK_CANCEL)
                     
     if(result == ui.Button.OK) {
-        Logger.log("Trashing target folder..."); 
+        //Logger.log("Trashing target folder..."); 
         found.setTrashed(true); 
-        Logger.log("Re-Creating output folder..."); 
+        //Logger.log("Re-Creating output folder..."); 
         found =  parent.createFolder(targetDirName);
       
     } else {
-        Logger.log("Do not delete target folder, stopping!"); 
+        //Logger.log("Do not delete target folder, stopping!"); 
         return;
     }
   }
@@ -137,7 +137,9 @@ function ConvertToAsciiDocFile() {
   }
   
   // Write mardown file to target folder
-  found.createFile(DocumentApp.getActiveDocument().getName() + ".adoc", convertedDoc.text, ADOC_MIMETYPE);   
+  // using same nameas folder.
+  found.createFile(targetDirName, convertedDoc.text, ADOC_MIMETYPE);   
+
 }
 
 function processSection(section) {
@@ -150,6 +152,7 @@ function processSection(section) {
     'size' : [], // Number of elements on a parsing tree level
     'listCounters' : [], // List counter
     'needToc' : false, // saw a toc reference
+    'indent' : 0, // indent on current block
   };
   
   // Process element tree outgoing from the root element
@@ -186,7 +189,7 @@ function asciidoc() {
   
   // Process footer
   var foot = DocumentApp.getActiveDocument().getFooter(); 
-  Logger.log("foot: " + foot);
+  //Logger.log("foot: " + foot);
   if(foot != null) {
     var teFoot = processSection(foot); 
     // Do not include empty footer sections
@@ -205,7 +208,7 @@ function asciidoc() {
   text = text.replace('\u201d', '"').replace('\u201c', '"');
   
   // Debug logging
-  Logger.log("Result: " + text);
+  //Logger.log("Result: " + text);
   Logger.log("Images: " + doc.state.imageCounter);
   
   // Build attachment and file lists
@@ -390,6 +393,11 @@ function handleText(doc, state) {
       formatted = formatMd(formatted, index, '^', lastIndex, '^'); 
     }
     
+    // replace newlines wit any indent requested from higher up formatting.
+    var haslinebreak = /\r/.exec(formatted);
+    formatted = formatted.replace(/(?:\r)/g, '\n+\n');
+    if (haslinebreak) // add extra newline to let list and others continue
+      formatted += "\n";
     // Keep track of last position in text
     lastIndex = index; 
   }
@@ -411,33 +419,40 @@ function handleListItem(item, state, depth) {
     prefix += '  ';
   }
   
+  var glyphprefix = ''
   // Add marker based on glyph type
   var glyph = item.getGlyphType();
-  Logger.log("Glyph: " + glyph);
+  //Logger.log("Glyph: " + glyph);
   switch(glyph) {
     case DocumentApp.GlyphType.BULLET:
     case DocumentApp.GlyphType.HOLLOW_BULLET:
     case DocumentApp.GlyphType.SQUARE_BULLET: 
-      prefix += '* ';
+      glyphprefix = '*'.repeat(item.getNestingLevel()+1) + ' ';
       break;
     case DocumentApp.GlyphType.NUMBER:
       var key = item.getListId() + '.' + item.getNestingLevel();
-      Logger.log("key " + key); 
+      //Logger.log("key " + key); 
       var counter = state.listCounters[key] || 0;
       counter++;
       state.listCounters[key] = counter;
-      prefix += counter + '. ';
+      glyphprefix += '.'.repeat(item.getNestingLevel()+1) + ' ';
       break;
     default:
-      prefix += '* ';
+      glyphprefix += '*'.repeat(item.getNestingLevel()+1) + ' ';
       break;
   }
   
   // Add prefix
-  textElements.push(prefix);
+  textElements.push(prefix + glyphprefix);
+  
+  oldIndent = state.indent
+  state.indent = glyphprefix.length + prefix.length
+  children = processChilds(item, state, depth)
+  state.indent = oldIndent
+  
   
   // Handle all childs
-  textElements = textElements.concat(processChilds(item, state, depth));
+  textElements = textElements.concat(children);
   
   return textElements;
 }
@@ -532,7 +547,10 @@ function processChilds(doc, state, depth) {
     state.prevDoc[depth] = prevDoc; 
     
     textElements = textElements.concat(processElement(child, state, depth+1)); 
+    
   }
+  
+  
   return textElements;
 }
 
