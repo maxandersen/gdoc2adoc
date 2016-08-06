@@ -586,7 +586,7 @@ function processElement(element, state, depth) {
         case DocumentApp.ParagraphHeading.HEADING1: 
         case DocumentApp.ParagraphHeading.TITLE: 
           prefix = '='; state.needToc = true; break;
-        default:prefix = element.getHeading(); break;
+        //default:prefix = element.getHeading(); break;
        }
       
       // Add space
