@@ -583,7 +583,10 @@ function processElement(element, state, depth) {
         case DocumentApp.ParagraphHeading.HEADING3: prefix = '==='; break;
         case DocumentApp.ParagraphHeading.HEADING2: prefix = '=='; break;
           // TODO: forcing toc enable on heading1's, should only do it if needed.
-        case DocumentApp.ParagraphHeading.HEADING1: prefix = '='; state.needToc = true; break;
+        case DocumentApp.ParagraphHeading.HEADING1: 
+        case DocumentApp.ParagraphHeading.TITLE: 
+          prefix = '='; state.needToc = true; break;
+        default:prefix = element.getHeading(); break;
        }
       
       // Add space
