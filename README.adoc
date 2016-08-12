@@ -34,26 +34,28 @@ Things not yet handled proper asciidoc way is marked with a todo.
     * paragraphs are separated by two newlines
     * text styled as heading 1, 2, 3, etc is converted to AsciiDoc heading: =, ==, ===, etc
     * TODO: text formatted with Courier New is backquoted: ``text``
-    * TODO: links are converted to MD format: `[anchortext](url)`
-  * TODO: Lists:
+    * links are converted to asciidoc format: `url[anchortext]`
+  * Lists:
     * Numbered lists are converted correctly, including nested lists
     * bullet lists are converted to "`*`" AsciiDoc format appropriately, including nested lists
+    * Honors linebreak in paragraphs by using asciidoc line continuation ('+' on empty line) 
   * Images:
     * images are correctly extracted and sent as attachments
   * Drawings: 
     * not supported - there seems to be no API function to export a drawing as a rasterized or vector image. 
   * TODO: Equations:
-    * Equations are converted to LaTex equations and surrounded by ``$`` signs 
+    * Equaations are not supported.
   * Table of contents:
     * Is handled by asciidoctor `toc` macros
   * Horizontal line: 
     * Inserts a `---`
-  * TODO: Header/Footer:
+  * Header/Footer:
     * Extracts text with all formattings and inserts it at the top and bottom of the AsciiDoc document, seperated by `---`.
   * Tables:
     * Converted to AsciiDoc tables. Formatting within cells gets transferred.
-  * TODO: Source code: 
+  * Source code: 
     * Fenced code blocks are started by three back-ticks and a string and ended by three back-ticks. If such a fenced code block is detected, single line break is used within it. 
+
 == Reading materials
 
 Documentation about https://developers.google.com/apps-script/guides/docs[Google Documentation document structure]
