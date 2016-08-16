@@ -285,7 +285,7 @@ function handleTable(element, state, depth) {
         stack.push("| " + text);
       }
       
-      stack.push(" |\n");
+      stack.push(" \n");
     }
   
     stack.push("|===\n")
