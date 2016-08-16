@@ -23,8 +23,6 @@ You can explore this script on this https://docs.google.com/document/d/19VD9FCTj
   * Running the script (run as many times as you want):
     - AsciiDoc > Export File (Creates a new folder `target` in the same directory as the document. AsciiDoc and image files are stored in it. A warning is generated if a `target` directory already exists) 
     - AsciiDoc > Export Email (Sends you an email with the AsciiDoc and image files)
-    - AsciiDoc > Latex Equation (Put your cursor on a equation and run the script. It will output the LaTex formatting in a dialog)
-
 
 == Interpreted formats
 
