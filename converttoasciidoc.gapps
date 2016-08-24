@@ -1,3 +1,4 @@
+// vim: set softtabstop=2 shiftwidth=2 expandtab :
 var ADOC_MIMETYPE = "text/asciidoc";
 
 // Open handler to add Menu
@@ -153,8 +154,12 @@ function processSection(section) {
     'listCounters' : [], // List counter
     'needToc' : false, // saw a toc reference
     'indent' : 0, // indent on current block
+    'headingPrefix' : '', // Should headings be prefixed by a `=` to make heading1 `==` (see detectHeadingRules)
   };
-  
+
+  // Detect title, heading1 etc
+  detectHeadingRules(section, state);
+
   // Process element tree outgoing from the root element
   var textElements = processElement(section, state, 0);
   
@@ -162,6 +167,64 @@ function processSection(section) {
     'textElements' : textElements,
     'state' : state,
   }; 
+}
+
+function detectHeadingRulesNested(element, state, headingState) {
+  Logger.log("detectHeadingRulesNested: " + element.getType()); 
+
+  switch(element.getType()) {
+    case DocumentApp.ElementType.DOCUMENT:
+    case DocumentApp.ElementType.BODY_SECTION:
+      // Iterates over all childs
+      for(var i=0; i < element.getNumChildren(); i++)  {
+        var child = element.getChild(i); 
+        
+        detectHeadingRulesNested(child, state, headingState);
+      }
+      break; 
+      
+    case DocumentApp.ElementType.PARAGRAPH:
+      switch (element.getHeading()) {
+        case DocumentApp.ParagraphHeading.HEADING1:
+          headingState.nbrOfH1 += 1; break;
+        case DocumentApp.ParagraphHeading.TITLE:
+          headingState.hasTitle = true;
+      }
+
+      // Iterates over all childs
+      for(var i=0; i < element.getNumChildren(); i++)  {
+        var child = element.getChild(i); 
+        
+        detectHeadingRulesNested(child, state, headingState);
+      }
+  }
+}
+
+function detectHeadingRules(element, state) {
+
+  var headingState = {
+    'nbrOfH1': 0,
+    'hasTitle' : false,
+  };
+
+  detectHeadingRulesNested(element, state, headingState);
+
+  Logger.log("Heading detection, nbrOfH1: " + headingState.nbrOfH1 + " and title: " + headingState.hasTitle);
+
+  if (headingState.hasTitle == true) {
+    Logger.log("Heading prefix `=` because there is a title");
+    state.headingPrefix = '=';
+  }
+  else if (headingState.nbrOfH1 == 1) {
+    // we have a single heading1 so we will pretend it's the title and h2 is for subsections
+    Logger.log("Heading prefix `` because there is a single h1");
+    state.headingPrefix = '';
+  }
+  else {
+    // no title and multiple (or no h1) => treat h1 as a Asciidoc subsection (i.e. `==`)
+    Logger.log("No title and multiple (or no h1) => treat h1 as a Asciidoc subsection (i.e. `==`)");
+    state.headingPrefix = '=';
+  }
 }
 
 
@@ -576,19 +639,17 @@ function processElement(element, state, depth) {
       // Determine header prefix
       var prefix = ''; 
       switch (element.getHeading()) {
-        // title is = according to Asciidoc rules, which makes heading1 == etc
-        case DocumentApp.ParagraphHeading.HEADING6: prefix = '======='; break;
-        case DocumentApp.ParagraphHeading.HEADING5: prefix = '======'; break;
-        case DocumentApp.ParagraphHeading.HEADING4: prefix = '====='; break;
-        case DocumentApp.ParagraphHeading.HEADING3: prefix = '===='; break;
-        case DocumentApp.ParagraphHeading.HEADING2: prefix = '==='; break;
-        case DocumentApp.ParagraphHeading.HEADING1: 
-          prefix = '=='; break;
-        case DocumentApp.ParagraphHeading.TITLE: 
+        case DocumentApp.ParagraphHeading.HEADING6: prefix = state.headingPrefix + '======'; break;
+        case DocumentApp.ParagraphHeading.HEADING5: prefix = state.headingPrefix + '====='; break;
+        case DocumentApp.ParagraphHeading.HEADING4: prefix = state.headingPrefix + '===='; break;
+        case DocumentApp.ParagraphHeading.HEADING3: prefix = state.headingPrefix + '==='; break;
+        case DocumentApp.ParagraphHeading.HEADING2: prefix = state.headingPrefix + '=='; break;
+        case DocumentApp.ParagraphHeading.HEADING1: prefix = state.headingPrefix + '='; break;
+        case DocumentApp.ParagraphHeading.TITLE:
           prefix = '='; state.needToc = true; break;
         //default:prefix = element.getHeading(); break;
        }
-      
+
       // Add space
       if(prefix.length > 0)
         prefix += ' ';
