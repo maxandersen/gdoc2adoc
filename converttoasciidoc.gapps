@@ -576,14 +576,14 @@ function processElement(element, state, depth) {
       // Determine header prefix
       var prefix = ''; 
       switch (element.getHeading()) {
-        // Add a # for each heading level. 
-        case DocumentApp.ParagraphHeading.HEADING6: prefix = '======'; break;
-        case DocumentApp.ParagraphHeading.HEADING5: prefix = '====='; break;
-        case DocumentApp.ParagraphHeading.HEADING4: prefix = '===='; break;
-        case DocumentApp.ParagraphHeading.HEADING3: prefix = '==='; break;
-        case DocumentApp.ParagraphHeading.HEADING2: prefix = '=='; break;
-          // TODO: forcing toc enable on heading1's, should only do it if needed.
+        // title is = according to Asciidoc rules, which makes heading1 == etc
+        case DocumentApp.ParagraphHeading.HEADING6: prefix = '======='; break;
+        case DocumentApp.ParagraphHeading.HEADING5: prefix = '======'; break;
+        case DocumentApp.ParagraphHeading.HEADING4: prefix = '====='; break;
+        case DocumentApp.ParagraphHeading.HEADING3: prefix = '===='; break;
+        case DocumentApp.ParagraphHeading.HEADING2: prefix = '==='; break;
         case DocumentApp.ParagraphHeading.HEADING1: 
+          prefix = '=='; break;
         case DocumentApp.ParagraphHeading.TITLE: 
           prefix = '='; state.needToc = true; break;
         //default:prefix = element.getHeading(); break;
