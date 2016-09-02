@@ -411,12 +411,9 @@ function handleText(doc, state) {
       continue; 
     } 
     
-    // Handle font family
-    if(doc.getFontFamily(index)) {
-      var font = doc.getFontFamily(index); 
-      var sourceFont = font.COURIER_NEW; 
-      
-      if (!state.inSource && font === sourceFont) {
+    // Handle source code
+    if(isTextCode(doc, index)) {
+      if (!state.inSource) {
         // Scan left until text without source font is found
         while (i > 0 && doc.getFontFamily(attrs[i-1]) && doc.getFontFamily(attrs[i-1]) === sourceFont) {
           i -= 1;
@@ -448,6 +445,8 @@ function handleText(doc, state) {
     // Handle italic
     else if(doc.isItalic(index)) {
       formatted = formatMd(formatted, index, '_', lastIndex, '_'); 
+    } else if (doc.isUnderline(index)) {
+      formatted = formatMd(formatted, index, '[.underline]#', lastIndex, '#'); 
     } else if(doc.isStrikethrough(index)) {
       formatted = formatMd(formatted, index, '[.line-through]#', lastIndex, '#'); 
     } else if(doc.getTextAlignment(index) == DocumentApp.TextAlignment.SUBSCRIPT) {
@@ -769,4 +768,25 @@ function processElement(element, state, depth) {
   }
   
   return textElements; 
+}
+
+// from https://github.com/Mogztter/asciidoc-googledocs-addon/blob/master/app/Code.gs
+/** Guess if the text is code by looking at the font family. */
+function isTextCode(doc, index) {
+  // Things will be better if Google Fonts can tell us about a font
+  var i, fontFamily = doc.getFontFamily(index), /* Now it returns a string! */
+  monospaceFonts = ['Consolas', 'Courier New', 'Source Code Pro'];
+  if (fontFamily === null) {
+    return false; // Handle null early.. It means multiple values.
+  }
+  // See ES7 Array.prototype.includes(elem, pos)
+  for (i = 0; i < monospaceFonts.length; i++) {
+    if (fontFamily === monospaceFonts[i]) {
+      return true;
+    }
+  }
+  // Last Try: Assume it's mono if it ends with ' Mono'.
+  // This works for all Google Fonts as of 2016-10-21.
+  // See ES6 String.prototype.endsWith(str, pos).
+  return fontFamily.indexOf(' Mono') === fontFamily.length - 5;
 }
