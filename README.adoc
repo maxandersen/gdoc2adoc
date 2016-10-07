@@ -5,7 +5,7 @@ A simple Google Apps script to convert a properly formatted Google
 Drive Document to asciidoc (.adoc) format, or rather more precisly
 asciidoctor compatible format.
 
-image:asciidoc.pn[Screenshot Google Docs with gdoc2adoc]
+image:asciidoc.png[Screenshot Google Docs with gdoc2adoc]
 
 == Try it
 
