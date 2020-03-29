@@ -1,5 +1,11 @@
-gdoc2adoc
-========
+= gdoc2adoc
+
+
+This project contains two ways to convert a Google Document to asciidoc(tor) format.
+
+First most mature are using Google Apps Script the other more experimental uses developers.google.com/docs/api/[Google Doc API].
+
+== Google Apps
 
 A simple Google Apps script to convert a properly formatted Google
 Drive Document to asciidoc (.adoc) format, or rather more precisly
@@ -7,11 +13,11 @@ asciidoctor compatible format.
 
 image:asciidoc.png[Screenshot Google Docs with gdoc2adoc]
 
-== Try it
+=== Try it
 
 You can explore this script on this https://docs.google.com/document/d/19VD9FCTj6tHeWxdhkmctA1r9Ko3surX3Ee8wp_iwlo4/edit?usp=sharing[Google Doc] document - you just need to copy this to your own Google Drive to be able to run the script via the Tools or AsciiDoc menu.
 
-== Usage
+=== Usage
 
 * Adding this script to your doc (once per doc):
 ** Open your Google Drive document (http://drive.google.com)
@@ -24,7 +30,7 @@ You can explore this script on this https://docs.google.com/document/d/19VD9FCTj
 ** AsciiDoc > Export File (Creates a new folder `target` in the same directory as the document. AsciiDoc and image files are stored in it. A warning is generated if a `target` directory already exists) 
 ** AsciiDoc > Export Email (Sends you an email with the AsciiDoc and image files)
 
-== Interpreted formats
+=== Interpreted formats
 
 Things not yet handled proper asciidoc way is marked with a todo.
 
@@ -54,9 +60,19 @@ Things not yet handled proper asciidoc way is marked with a todo.
 * Source code: 
 ** Fenced code blocks are started by three back-ticks and a string and ended by three back-ticks. If such a fenced code block is detected, single line break is used within it. 
 
-== Reading materials
+=== Reading materials
 
 Documentation about https://developers.google.com/apps-script/guides/docs[Google Documentation document structure]
+
+== Google Doc API
+
+This implementation is for now a proof-of-concept, lots of formatting not supported yet (contributions welcome)!
+
+To use this you need to:
+
+1. https://console.developers.google.com/apis/library/docs.googleapis.com?q=google%20doc&id=9bc59c8c-49cd-4ac5-8665-d0891d366733&project=orggcal-270008[Enable Google Doc Api] and get auth credentials and save it in `credentials.json`.
+2. Install https://github.com/maxandersen/jbang[jbang]
+3. Run `./gdoc2adoc.java <url to google doc> > mydoc.adoc`
 
 == CONTRIBUTORS
 
