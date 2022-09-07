@@ -3,7 +3,7 @@
 
 This project contains two ways to convert a Google Document to asciidoc(tor) format.
 
-First most mature are using Google Apps Script the other more experimental uses developers.google.com/docs/api/[Google Doc API].
+The first one is most mature and uses Google Apps Script, the second one is more experimental and uses the https://developers.google.com/docs/api/[Google Doc API].
 
 == Google Apps
 
